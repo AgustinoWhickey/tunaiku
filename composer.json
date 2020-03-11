@@ -1,0 +1,15 @@
+{
+    "name": "tunaiku/tunaiku-composer",
+    "description": "For tunaiku",
+    "type": "project",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "AgustinoWhickey",
+            "email": "wakembus98@gmail.com"
+        }
+    ],
+    "require": {
+        "aws/aws-sdk-php": "^3.133"
+    }
+}
