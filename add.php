@@ -20,7 +20,7 @@
 	}
 	?>
 
-    <form action="add.php" method="post" name="form1">
+    <form action="proses_add.php?action=add" method="post" name="form1">
         <table width="25%" border="0">
             <tr> 
                 <td>First Name</td>
@@ -75,61 +75,5 @@
             </tr>
         </table>
     </form>
-
-    <?php
-
-    if(isset($_POST['Submit'])) {
-        $firstname = $_POST['firstname'];
-        $lastname = $_POST['lastname'];
-        $idcard = $_POST['idcard'];
-        $loanamount = $_POST['loanamount'];
-        $loanperiode = $_POST['loanperiode'];
-        $loanpurpose = $_POST['loanpurpose'];
-        $birth = strtotime($_POST['birth']);
-		$date = date("Y-m-d h:i:sa", $birth);
-		$birthid = date("dmY", $birth);
-        $sex = $_POST['sex'];
-
-        include_once("config.php");
-		if($firstname == "" || $lastname == ""){
-			header("location:add.php?nama=empty");
-		}else if(preg_match("/^[a-z0-9_-]{1,6}(0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])[0-9]{4}[a-z0-9_-]{1,4}$/",$idcard)){
-			header("location:add.php?ktp=salah");
-		}else{
-			$result = mysqli_query($mysqli, "INSERT INTO user_loan(first_name,last_name,id_card,loan_amount,loan_period,loan_purpose,birth,sex) VALUES('$firstname','$lastname','$idcard','$loanamount','$loanperiode','$loanpurpose','$date','$sex')");
-
-			//echo "User added successfully. <a href='index.php'>View Users</a>";
-			
-			require('fpdf.php');
-			ob_start();
-			$pdf = new FPDF('l','mm','A5');
-			$pdf->AddPage();
-			$pdf->SetFont('Arial','B',16);
-			$pdf->Cell(190,7,'TUNAIKU INDONESIA',0,1,'C');
-			$pdf->SetFont('Arial','B',12);
-			$pdf->Cell(190,7,'TEST TUNAIKU INDONESIA',0,1,'C');
-
-			$pdf->Cell(10,7,'',0,1);
-
-			$pdf->SetFont('Arial','B',10);
-			$pdf->Cell(20,6,'KTP',1,0);
-			$pdf->Cell(85,6,'NAMA',1,0);
-			$pdf->Cell(27,6,'LOAN AMOUNT',1,0);
-			$pdf->Cell(25,6,'LOAN PERIOD',1,1);
-
-			$pdf->SetFont('Arial','',10);
-
-			$user = mysqli_query($mysqli, "select * from user_loan");
-			while ($row = mysqli_fetch_array($user)){
-				$pdf->Cell(20,6,$row['id_card'],1,0);
-				$pdf->Cell(85,6,$row['first_name'].' '.$row['last_name'],1,0);
-				$pdf->Cell(27,6,$row['loan_amount'],1,0);
-				$pdf->Cell(25,6,$row['loan_period'],1,1); 
-			}
-
-			$pdf->Output();
-		}
-    }
-    ?>
 </body>
 </html>
